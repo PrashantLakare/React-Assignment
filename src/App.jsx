@@ -1,40 +1,25 @@
-import { useEffect, useState } from "react";
-import UserCard from "./components/UserCard";
-import Loader from "./components/Loader";
+import { Link, Route, Routes, useParams } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import UserProfilePage from "./pages/UserProfilePage";
+
+function UserProfileRoute() {
+  const { id } = useParams();
+  return <UserProfilePage key={id} />;
+}
 
 function App() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        // Delay added of 3 seconds to show the loader
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h1>User Profiles</h1>
+    <div className="container py-4 min-vh-100">
+      <header className="mb-4 pb-3 border-bottom">
+        <Link to="/" className="h4 mb-0 text-decoration-none text-dark">
+          User Profiles
+        </Link>
+      </header>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="grid">
-          {users.map((user) => (
-            <UserCard key={user.id} user={user} />
-          ))}
-        </div>
-      )}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/user/:id" element={<UserProfileRoute />} />
+      </Routes>
     </div>
   );
 }
