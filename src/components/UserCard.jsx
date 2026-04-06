@@ -99,7 +99,7 @@ function UserCard({ user }) {
         <Typography.Title level={5} style={{ marginTop: 0 }}>
           {user.name}
         </Typography.Title>
-        <Space direction="vertical" size={4} style={{ width: "100%" }}>
+        <Space orientation="vertical" size={4} style={{ width: "100%" }}>
           <div>
             <MailOutlined style={{ marginRight: 8, color: "#8c8c8c" }} />
             <Text type="secondary">{user.email}</Text>

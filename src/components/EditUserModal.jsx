@@ -63,7 +63,7 @@ function EditUserModal({ open, user, onClose }) {
       onOk={handleOk}
       onCancel={onClose}
       okText="Save"
-      destroyOnClose
+      destroyOnHidden
     >
       <Form form={form} layout="vertical" requiredMark="optional">
         <Form.Item name="name" label="Name" rules={[{ required: true, message: "Name is required" }]}>

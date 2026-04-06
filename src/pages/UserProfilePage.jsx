@@ -74,7 +74,7 @@ function UserProfilePage() {
 
   return (
     <Card className="user-profile" styles={{ body: { padding: 24 } }}>
-      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+      <Space orientation="vertical" size="large" style={{ width: "100%" }}>
         <div>
           <Link to="/">← Back to list</Link>
         </div>
