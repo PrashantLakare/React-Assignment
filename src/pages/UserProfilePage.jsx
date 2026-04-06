@@ -1,119 +1,137 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Alert, Card, Col, Row, Space, Typography } from "antd";
 import Loader from "../components/Loader";
+
+const { Title, Text } = Typography;
 
 function UserProfilePage() {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const userId = Number(id);
+  const userFromRedux = useSelector((state) =>
+    state.users.items.find((u) => u.id === userId),
+  );
+
+  const [remoteUser, setRemoteUser] = useState(null);
+  const [fetchError, setFetchError] = useState(false);
 
   useEffect(() => {
+    if (userFromRedux) {
+      return;
+    }
+
     let cancelled = false;
 
-    fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
       })
       .then((data) => {
         if (!cancelled) {
-          setUser(data);
-          setError(false);
+          setRemoteUser({ ...data, favorite: false });
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setError(true);
-          setUser(null);
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
+          setFetchError(true);
+          setRemoteUser(null);
         }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [id]);
+  }, [userId, userFromRedux]);
+
+  const user = userFromRedux ?? remoteUser;
+  const loading = !user && !fetchError;
 
   if (loading) {
-    return <Loader />;
-  }
-
-  if (error || !user) {
     return (
-      <div className="alert alert-warning" role="alert">
-        <p className="mb-2">Could not load this profile.</p>
-        <Link to="/" className="alert-link">
-          Back to all users
-        </Link>
+      <div style={{ textAlign: "center", padding: 80 }}>
+        <Loader />
       </div>
     );
   }
 
-  const avatar = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${user.id}`;
+  if (fetchError || !user) {
+    return (
+      <Alert
+        type="warning"
+        showIcon
+        message="Could not load this profile."
+        description={
+          <Link to="/">Back to all users</Link>
+        }
+      />
+    );
+  }
+
+  // const avatarSrc = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&size=256&background=E8E8E8&color=555`;
+  const avatarSrc = `https://api.dicebear.com/9.x/pixel-art/svg?seed=${user.id}`;
 
   return (
-    <div className="user-profile card shadow-sm">
-      <div className="card-body">
-        <p className="mb-3">
-          <Link to="/" className="text-decoration-none">
-            ← Back to list
-          </Link>
-        </p>
-
-        <div className="d-flex gap-4 align-items-start flex-wrap">
-          <img
-            src={avatar}
-            alt={`${user.name} avatar`}
-            className="rounded border bg-light"
-            width={120}
-            height={120}
-          />
-          <div>
-            <h1 className="h3 mb-1">{user.name}</h1>
-            <p className="text-muted mb-0">@{user.username}</p>
-          </div>
+    <Card className="user-profile" styles={{ body: { padding: 24 } }}>
+      <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <div>
+          <Link to="/">← Back to list</Link>
         </div>
 
-        <hr />
+        <Space align="start" size="large" wrap>
+          <img
+            src={avatarSrc}
+            alt={`${user.name} avatar`}
+            style={{ width: 120, height: 120, borderRadius: 8, border: "1px solid #f0f0f0" }}
+          />
+          <div>
+            <Title level={2} style={{ marginTop: 0, marginBottom: 4 }}>
+              {user.name}
+            </Title>
+            <Text type="secondary">@{user.username}</Text>
+          </div>
+        </Space>
 
-        <div className="row g-3">
-          <div className="col-md-6">
-            <h2 className="h6 text-uppercase text-muted">Contact</h2>
-            <p className="mb-1">
+        <Row gutter={[16, 16]}>
+          <Col xs={24} md={12}>
+            <Title level={5} type="secondary" style={{ textTransform: "uppercase", fontSize: 12 }}>
+              Contact
+            </Title>
+            <p>
               <strong>Email:</strong> {user.email}
             </p>
-            <p className="mb-1">
+            <p>
               <strong>Phone:</strong> {user.phone}
             </p>
-            <p className="mb-0">
+            <p style={{ marginBottom: 0 }}>
               <strong>Website:</strong> {user.website}
             </p>
-          </div>
-          <div className="col-md-6">
-            <h2 className="h6 text-uppercase text-muted">Address</h2>
-            <p className="mb-0">
+          </Col>
+          <Col xs={24} md={12}>
+            <Title level={5} type="secondary" style={{ textTransform: "uppercase", fontSize: 12 }}>
+              Address
+            </Title>
+            <p style={{ marginBottom: 0 }}>
               {user.address.street}, {user.address.suite}
               <br />
               {user.address.city}, {user.address.zipcode}
             </p>
-          </div>
-          <div className="col-12">
-            <h2 className="h6 text-uppercase text-muted">Company</h2>
-            <p className="mb-1">
+          </Col>
+          <Col span={24}>
+            <Title level={5} type="secondary" style={{ textTransform: "uppercase", fontSize: 12 }}>
+              Company
+            </Title>
+            <p>
               <strong>{user.company.name}</strong>
             </p>
-            <p className="mb-0 text-muted fst-italic">
+            <Text type="secondary" style={{ fontStyle: "italic" }}>
               “{user.company.catchPhrase}”
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+            </Text>
+          </Col>
+        </Row>
+      </Space>
+    </Card>
   );
 }
 

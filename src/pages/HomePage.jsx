@@ -1,39 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Alert, Button, Col, Empty, Row, Typography } from "antd";
 import UserCard from "../components/UserCard";
 import Loader from "../components/Loader";
+import { fetchUsers } from "../store/usersSlice";
 
 function HomePage() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { items, loading, error } = useSelector((state) => state.users);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/users")
-      .then((res) => res.json())
-      .then((data) => {
-        setUsers(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  }, []);
+    dispatch(fetchUsers());
+  }, [dispatch]);
+
+  if (loading && items.length === 0) {
+    return (
+      <div style={{ textAlign: "center", padding: 80 }}>
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <>
-      <h1 className="h3 mb-4">All users</h1>
+      <Typography.Title level={2} style={{ marginBottom: 24 }}>
+        All users
+      </Typography.Title>
 
-      {loading ? (
-        <Loader />
-      ) : (
-        <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-          {users.map((user) => (
-            <div key={user.id} className="col">
-              <UserCard user={user} />
-            </div>
-          ))}
-        </div>
-      )}
+      {error ? (
+        <Alert
+          type="error"
+          message={error}
+          showIcon
+          style={{ marginBottom: 16 }}
+          action={
+            <Button size="small" type="primary" onClick={() => dispatch(fetchUsers())}>
+              Retry
+            </Button>
+          }
+        />
+      ) : null}
+
+      {!loading && items.length === 0 && !error ? (
+        <Empty description="No users to display" />
+      ) : null}
+
+      <Row gutter={[16, 16]}>
+        {items.map((user) => (
+          <Col key={user.id} xs={24} sm={12} md={8} xl={6}>
+            <UserCard user={user} />
+          </Col>
+        ))}
+      </Row>
     </>
   );
 }
