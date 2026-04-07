@@ -1,6 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { authFetch } from "../auth/api";
 
-const USERS_URL = "https://jsonplaceholder.typicode.com/users";
+// const USERS_URL = "https://hbauth.herokuapp.com/users";
+// const USERS_URL = "https://jsonplaceholder.typicode.com/users";
+const USERS_URL = "http://localhost:5000/users";
 
 function normalizeUsers(apiUsers) {
   return apiUsers.map((u) => ({ ...u, favorite: false }));
@@ -8,7 +11,7 @@ function normalizeUsers(apiUsers) {
 
 export const fetchUsers = createAsyncThunk("users/fetchAll", async (_, { rejectWithValue }) => {
   try {
-    const res = await fetch(USERS_URL);
+    const res = await authFetch(USERS_URL);
     if (!res.ok) throw new Error("Failed to load users");
     const data = await res.json();
     return normalizeUsers(data);
