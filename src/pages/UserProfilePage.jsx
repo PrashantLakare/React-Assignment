@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Alert, Card, Col, Row, Space, Typography } from "antd";
 import Loader from "../components/Loader";
+import { authFetch } from "../auth/api";
 
 const { Title, Text } = Typography;
 
@@ -23,7 +24,8 @@ function UserProfilePage() {
 
     let cancelled = false;
 
-    fetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+    authFetch(`https://jsonplaceholder.typicode.com/users/${userId}`)
+    // authFetch(`https://hbauth.herokuapp.com/users/${userId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Not found");
         return res.json();
@@ -61,7 +63,7 @@ function UserProfilePage() {
       <Alert
         type="warning"
         showIcon
-        message="Could not load this profile."
+        title="Could not load this profile."
         description={
           <Link to="/">Back to all users</Link>
         }
