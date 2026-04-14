@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import UserProfilePage from "./UserProfilePage";
+import UserProfilePage from "../UserProfilePage.jsx";
 
 // 🔹 Mocks
 let selectorState;
@@ -20,12 +20,12 @@ vi.mock("react-redux", () => ({
 }));
 
 // Mock API
-vi.mock("../auth/api", () => ({
+vi.mock("../../auth/api", () => ({
   authFetch: (...args) => authFetchMock(...args),
 }));
 
 // Mock Loader
-vi.mock("../components/Loader", () => ({
+vi.mock("../../components/Loader", () => ({
   default: () => <div>LOADER</div>,
 }));
 

@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { authFetch } from "./api";
+import { authFetch } from "../api.js";
 
 // 🔹 Mocks
 let getAccessTokenMock;
 let fetchMock;
 
 // Mock auth
-vi.mock("./auth", () => ({
+vi.mock("../auth.js", () => ({
   getAccessToken: () => getAccessTokenMock(),
 }));
 

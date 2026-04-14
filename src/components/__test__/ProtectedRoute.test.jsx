@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "../ProtectedRoute.jsx";
 
 // 🔹 Mocks
 let isAuthMock;
@@ -18,7 +18,7 @@ vi.mock("react-router-dom", () => ({
 }));
 
 // Mock auth
-vi.mock("../auth/auth", () => ({
+vi.mock("../../auth/auth", () => ({
   isAuthenticated: () => isAuthMock,
 }));
 

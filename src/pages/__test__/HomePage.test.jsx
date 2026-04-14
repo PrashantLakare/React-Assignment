@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import HomePage from "./HomePage";
+import HomePage from "../HomePage.jsx";
 
 let selectorState;
 const dispatchMock = vi.fn();
@@ -13,15 +13,15 @@ vi.mock("react-redux", () => ({
 }));
 
 const fetchUsersAction = { type: "users/fetchAll" };
-vi.mock("../store/usersSlice", () => ({
+vi.mock("../../store/usersSlice", () => ({
   fetchUsers: () => fetchUsersAction,
 }));
 
-vi.mock("../components/Loader", () => ({
+vi.mock("../../components/Loader", () => ({
   default: () => <div>LOADER</div>,
 }));
 
-vi.mock("../components/UserCard", () => ({
+vi.mock("../../components/UserCard", () => ({
   default: ({ user }) => <div>{user.name}</div>,
 }));
 

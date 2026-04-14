@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import LoginPage from "./LoginPage";
+import LoginPage from "../LoginPage.jsx";
 
 let isAuthMock;
 let loginMock;
@@ -17,7 +17,7 @@ vi.mock("react-router-dom", () => ({
 }));
 
 // 🔹 Mock auth
-vi.mock("../auth/auth", () => ({
+vi.mock("../../auth/auth", () => ({
   isAuthenticated: () => isAuthMock,
   login: (...args) => loginMock(...args),
 }));

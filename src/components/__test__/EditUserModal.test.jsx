@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import EditUserModal from "./EditUserModal";
+import EditUserModal from "../EditUserModal.jsx";
 
 // 🔹 Mocks
 let dispatchMock;
@@ -15,7 +15,7 @@ vi.mock("react-redux", () => ({
 }));
 
 // Mock action
-vi.mock("../store/usersSlice", () => ({
+vi.mock("../../store/usersSlice", () => ({
   updateUser: (payload) => updateUserMock(payload),
 }));
 

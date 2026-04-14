@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import UserCard from "./UserCard";
+import UserCard from "../UserCard.jsx";
 
 // 🔹 Mocks
 let dispatchMock;
@@ -22,13 +22,13 @@ vi.mock("react-router-dom", () => ({
 }));
 
 // Mock actions
-vi.mock("../store/usersSlice", () => ({
+vi.mock("../../store/usersSlice", () => ({
   deleteUser: (id) => deleteUserMock(id),
   toggleFavorite: (id) => toggleFavoriteMock(id),
 }));
 
 // Mock Edit modal
-vi.mock("./EditUserModal", () => ({
+vi.mock("../EditUserModal", () => ({
   default: ({ open }) => (open ? <div>Edit Modal</div> : null),
 }));
 

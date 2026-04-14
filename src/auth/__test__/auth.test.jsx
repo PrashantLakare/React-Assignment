@@ -6,7 +6,7 @@ import {
   clearAccessToken,
   isAuthenticated,
   login,
-} from "./auth";
+} from "../auth.js";
 
 // 🔹 Mocks
 let fetchMock;
